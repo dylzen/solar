@@ -28,6 +28,10 @@ battery_measure = WebDriverWait(driver, 5).until(EC.visibility_of_element_locate
 print("Batterie: "+battery_measure.text)
 grid_measure = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'grid-measure')))
 print("Rete: "+grid_measure.text)
+gobal_state = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'GlobState_value')))
+print("Stato globale: "+gobal_state.text)
+inverter_state = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'InvState_value')))
+print("Stato inverter: "+inverter_state.text)
 date = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div[class="c-card-header-timestamp"] cux-card-timestamp')))
 print("Data/ora: "+date.text)
 
