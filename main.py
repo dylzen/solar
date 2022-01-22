@@ -10,23 +10,24 @@ def send_msg(text):
    token = config.token
    chat_id = config.chatID
    url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text 
-   response = requests.get(url_req)
-   print(response.json())
+   # response = requests.get(url_req)
+   # print(response.json())
 
+print("Initializing webdriver...")
 chrome_options = Options()
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--headless')
 driver = webdriver.Chrome(options=chrome_options)
 driver.get(config.login_url)
 print(driver.title)
-
+print("Logging in...")
 username_textbox=WebDriverWait(driver,5).until(EC.element_to_be_clickable((By.NAME,"username")))
 username_textbox.send_keys(config.username)
 password_textbox=WebDriverWait(driver,3).until(EC.element_to_be_clickable((By.NAME,"password")))
 password_textbox.send_keys(config.password)
 login_button=WebDriverWait(driver,3).until(EC.element_to_be_clickable((By.ID,"login-btn")))
 login_button.click()
-
+print("Fetching data...")
 battery_percentage = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.ID, 'TSoc_value')))
 battery_percentage_text = battery_percentage.text
 battery_percentage_float = float(battery_percentage.text)
@@ -36,7 +37,7 @@ grid_measure = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((
 global_state = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'GlobState_value')))
 inverter_state = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, 'InvState_value')))
 date = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div[class="c-card-header-timestamp"] cux-card-timestamp')))
-
+print("Creating strings...")
 battery_percentage_string = "Percentuale batterie: "+battery_percentage.text+"%"
 photovoltaic_measure_string = "Energia da fotovoltaico: "+photovoltaic_measure.text
 battery_measure_string = "Consumo da batterie: "+battery_measure.text
@@ -45,7 +46,6 @@ global_state_string = "Stato globale: "+global_state.text
 inverter_state_string = "Stato inverter: "+inverter_state.text
 date_string = "Data/ora: "+date.text
 
-if battery_percentage_float <= 20.1 or battery_percentage_float >= 79.9:
-    send_msg(battery_percentage_string+"\n"+photovoltaic_measure_string+"\n"+battery_measure_string+"\n"+grid_measure_string+"\n"+global_state_string+"\n"+inverter_state_string+"\n"+date_string)
-else:
-    send_msg("Batterie tra 20 e 80")
+send_msg(battery_percentage_string+"\n"+photovoltaic_measure_string+"\n"+battery_measure_string+"\n"+grid_measure_string+"\n"+global_state_string+"\n"+inverter_state_string+"\n"+date_string)
+
+print("Done.")
